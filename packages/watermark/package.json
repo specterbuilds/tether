@@ -1,0 +1,13 @@
+{
+  "name": "@tether/watermark",
+  "version": "0.1.0",
+  "description": "Recoverable invisible watermarking for Tether (interface + roadmap; implementation in progress)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "files": ["dist"],
+  "scripts": { "build": "tsc -b", "test": "tsx --test test/*.test.ts" }
+}

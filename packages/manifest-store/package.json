@@ -1,0 +1,16 @@
+{
+  "name": "@tether/manifest-store",
+  "version": "0.1.0",
+  "description": "Tamper-evident manifest repository interfaces and an in-memory reference implementation",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "files": ["dist"],
+  "scripts": { "build": "tsc -b", "test": "tsx --test test/*.test.ts" },
+  "dependencies": {
+    "@tether/core": "*"
+  }
+}

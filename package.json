@@ -1,0 +1,23 @@
+{
+  "name": "tether-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Tether - a vertical trust layer for photos, built on C2PA",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "tsx --test packages/*/test/*.test.ts",
+    "typecheck": "tsc -b --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

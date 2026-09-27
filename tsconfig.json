@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/crypto" },
+    { "path": "packages/watermark" },
+    { "path": "packages/manifest-store" },
+    { "path": "packages/tether" }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@tether/sdk",
+  "version": "0.1.0",
+  "description": "Tether SDK: sign platform photos into provenance manifests, verify images back to provenance cards",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "files": ["dist"],
+  "scripts": { "build": "tsc -b", "test": "tsx --test test/*.test.ts" },
+  "dependencies": {
+    "@tether/core": "*",
+    "@tether/crypto": "*",
+    "@tether/manifest-store": "*",
+    "@tether/watermark": "*"
+  }
+}
