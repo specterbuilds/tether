@@ -1,6 +1,6 @@
 {
   "name": "@tether/watermark",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Recoverable invisible watermarking for Tether (interface + roadmap; implementation in progress)",
   "type": "module",
   "main": "./dist/index.js",
