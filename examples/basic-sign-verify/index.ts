@@ -4,9 +4,17 @@
  * recompressed copy back to its provenance card.
  *
  * Run from the repo root: npm run build && npx tsx examples/basic-sign-verify/index.ts
+ * The sample images it writes land in examples/basic-sign-verify/assets/.
  */
+import { writeFileSync, mkdirSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { PNG } from "pngjs";
 import { Tether, Ed25519Signer, InMemoryManifestStore } from "@tether/sdk";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const assets = join(here, "assets");
+mkdirSync(assets, { recursive: true });
 
 // --- a synthetic "user photo" (64x64 gradient with a red square) ---
 function makePhoto(alter = 0): Uint8Array {
@@ -28,22 +36,34 @@ const signer = Ed25519Signer.generate(); // platform key custody - persist signe
 const store = new InMemoryManifestStore(); // swap for Postgres/hosted in production
 const tether = new Tether();
 
-// 1. At upload: bind the photo to a signed manifest.
-const manifest = await tether.sign(makePhoto(), {
+console.log("1. upload: platform signs a (synthetic) user photo at upload time");
+const original = makePhoto();
+writeFileSync(join(assets, "photo-original.png"), original);
+
+const manifest = await tether.sign(original, {
   issuer: { id: "dating.example.com", name: "Example Dating" },
   claims: [{ type: "tether.dating/uploader-attested", value: { accountAgeDays: 400 } }],
   signer,
   store,
 });
-console.log("signed manifest:", manifest.manifestId);
+console.log(`   manifest ${manifest.manifestId}`);
+console.log(`   sha256  ${manifest.content.sha256}`);
+console.log(`   phash   ${manifest.content.phash}`);
+console.log(`   signed  Ed25519, key ${manifest.signature.publicKey.slice(0, 16)}...`);
 
-// 2. The photo gets downloaded, recompressed, re-uploaded elsewhere.
-const recompressed = makePhoto(1);
+console.log("");
+console.log("2. the photo leaves the platform: downloaded, recompressed, re-uploaded");
+const recompressed = makePhoto(1); // same photo, slightly different pixels
+writeFileSync(join(assets, "photo-recompressed.png"), recompressed);
+console.log("   bytes differ, pixels barely do - sha256 no longer matches");
 
-// 3. At view time: resolve it back to a provenance card.
+console.log("");
+console.log("3. view time: verify the recompressed copy back to its provenance card");
 const card = await tether.verify(recompressed, {
   store,
   trustedPublicKeys: [signer.publicKeyHex],
 });
 console.log(JSON.stringify(card, null, 2));
-// card.integrity === "similar" - not the exact bytes, but the same photo.
+writeFileSync(join(assets, "provenance-card.json"), JSON.stringify(card, null, 2) + "\n");
+console.log("");
+console.log('   integrity: "similar" - not the exact signed bytes, but the same photo.');

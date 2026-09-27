@@ -1,0 +1,27 @@
+{
+  "manifestId": "9d7ca5cb-6d45-45b5-8b81-d5d3cd99a786",
+  "issuer": {
+    "id": "dating.example.com",
+    "name": "Example Dating"
+  },
+  "createdAt": "2026-09-27T12:01:58.464Z",
+  "claims": [
+    {
+      "type": "tether.dating/uploader-attested",
+      "value": {
+        "accountAgeDays": 400
+      }
+    }
+  ],
+  "integrity": "similar",
+  "similarity": 1,
+  "signatureValid": true,
+  "revoked": false,
+  "history": [
+    {
+      "manifestId": "9d7ca5cb-6d45-45b5-8b81-d5d3cd99a786",
+      "createdAt": "2026-09-27T12:01:58.464Z",
+      "revoked": false
+    }
+  ]
+}

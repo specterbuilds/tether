@@ -12,3 +12,11 @@ npx tsx examples/basic-sign-verify/index.ts
 Expected output: a signed manifest ID, then a provenance card with
 `integrity: "similar"` - the presented image is not the exact signed bytes,
 but the perceptual fingerprint resolves it to the same photo.
+
+## Assets
+
+Running the example regenerates everything in `assets/`:
+
+- `photo-original.png` - the synthetic photo signed at upload
+- `photo-recompressed.png` - the same photo after simulated recompression
+- `provenance-card.json` - the card `verify()` returns for the recompressed copy

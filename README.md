@@ -42,6 +42,69 @@ any image ──▶ verify() ──▶ provenance card
 - **Tamper-evident repository**: manifests are append-only; revocation
   (consent withdrawn, fraud confirmed) is recorded, never silent.
 
+## See it work
+
+Real output from [`examples/basic-sign-verify`](examples/basic-sign-verify)
+(run it yourself: `npm run build && npx tsx examples/basic-sign-verify/index.ts`).
+A platform signs a photo at upload; the photo gets recompressed off-platform;
+`verify()` still resolves it to a provenance card:
+
+<table>
+  <tr>
+    <td align="center"><img src="examples/basic-sign-verify/assets/photo-original.png" width="128"><br><sub>signed at upload</sub></td>
+    <td align="center"><img src="examples/basic-sign-verify/assets/photo-recompressed.png" width="128"><br><sub>recompressed copy</sub></td>
+    <td align="center">&#8594;<br><a href="examples/basic-sign-verify/assets/provenance-card.json">provenance-card.json</a><br><sub>what verify() returns</sub></td>
+  </tr>
+</table>
+
+```console
+1. upload: platform signs a (synthetic) user photo at upload time
+   manifest 9d7ca5cb-6d45-45b5-8b81-d5d3cd99a786
+   sha256  7f918f97c781c1c92482b95d4dbf4afe21193ab8cd5a19d3df3777fbb01cd70c
+   phash   00000002020200000000001f1f3fffff
+   signed  Ed25519, key 07588f2289657d70...
+
+2. the photo leaves the platform: downloaded, recompressed, re-uploaded
+   bytes differ, pixels barely do - sha256 no longer matches
+
+3. view time: verify the recompressed copy back to its provenance card
+{
+  "manifestId": "9d7ca5cb-6d45-45b5-8b81-d5d3cd99a786",
+  "issuer": {
+    "id": "dating.example.com",
+    "name": "Example Dating"
+  },
+  "createdAt": "2026-09-27T12:01:58.464Z",
+  "claims": [
+    {
+      "type": "tether.dating/uploader-attested",
+      "value": {
+        "accountAgeDays": 400
+      }
+    }
+  ],
+  "integrity": "similar",
+  "similarity": 1,
+  "signatureValid": true,
+  "revoked": false,
+  "history": [
+    {
+      "manifestId": "9d7ca5cb-6d45-45b5-8b81-d5d3cd99a786",
+      "createdAt": "2026-09-27T12:01:58.464Z",
+      "revoked": false
+    }
+  ]
+}
+
+   integrity: "similar" - not the exact signed bytes, but the same photo.
+```
+
+The two images above have different bytes - their SHA-256 hashes do not
+match. The perceptual fingerprint does, so the card comes back
+`integrity: "similar"` with the platform's attestation, claims, history and
+revocation status. That is the whole idea: provenance survives the trip
+through the internet's recompression blender.
+
 ## Packages
 
 | Package                  | What it is                                                                |
