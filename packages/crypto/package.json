@@ -1,6 +1,6 @@
 {
   "name": "@tether/crypto",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Signer abstraction for Tether: Ed25519 today, ML-DSA (Dilithium) post-quantum ready",
   "type": "module",
   "main": "./dist/index.js",
