@@ -18,7 +18,7 @@ jobs:
       - run: npm run build
       - run: npm test
       - name: Create release PR or publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           version: npm run version-packages
           # publish is disabled until an npm token is configured; the
