@@ -1,5 +1,8 @@
 # Tether
 
+[![ci](https://github.com/specterbuilds/tether/actions/workflows/ci.yml/badge.svg)](https://github.com/specterbuilds/tether/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 **A vertical trust layer for photos, built on C2PA.**
 
 Dating apps, marketplaces and AI tools all have the same problem: anyone can
@@ -32,7 +35,7 @@ any image ──▶ verify() ──▶ provenance card
 - **Content hash** (SHA-256): byte-exact binding.
 - **Perceptual fingerprint** (dHash): survives recompression, resizing and
   mild crops - the "same photo, different bytes" path.
-- **Recoverable invisible watermark** *(in progress)*: survives screenshots
+- **Recoverable invisible watermark** _(in progress)_: survives screenshots
   and metadata stripping. See `packages/watermark`.
 - **Signatures**: Ed25519 today, ML-DSA-65 (FIPS 204 Dilithium) post-quantum
   signers slot into the same interface.
@@ -41,21 +44,21 @@ any image ──▶ verify() ──▶ provenance card
 
 ## Packages
 
-| Package | What it is |
-| --- | --- |
-| `@tether/sdk` | The entry point: `sign()` and `verify()`. |
-| `@tether/core` | Manifest model, content hashing, perceptual fingerprint, provenance card. |
-| `@tether/crypto` | Signer interface, Ed25519 implementation, ML-DSA placeholder. |
-| `@tether/manifest-store` | Repository interface + in-memory reference implementation. |
-| `@tether/watermark` | Watermark interface; DCT-domain implementation in progress. |
+| Package                  | What it is                                                                |
+| ------------------------ | ------------------------------------------------------------------------- |
+| `@tether/sdk`            | The entry point: `sign()` and `verify()`.                                 |
+| `@tether/core`           | Manifest model, content hashing, perceptual fingerprint, provenance card. |
+| `@tether/crypto`         | Signer interface, Ed25519 implementation, ML-DSA placeholder.             |
+| `@tether/manifest-store` | Repository interface + in-memory reference implementation.                |
+| `@tether/watermark`      | Watermark interface; DCT-domain implementation in progress.               |
 
 ## Quick start
 
 ```ts
 import { Tether, Ed25519Signer, InMemoryManifestStore } from "@tether/sdk";
 
-const signer = Ed25519Signer.generate();       // platform key custody
-const store = new InMemoryManifestStore();     // swap for Postgres/hosted
+const signer = Ed25519Signer.generate(); // platform key custody
+const store = new InMemoryManifestStore(); // swap for Postgres/hosted
 const tether = new Tether();
 
 // At upload:
@@ -82,13 +85,34 @@ matching, revocation, fail-closed trust. In progress: the watermark embedder,
 JPEG/WebP decoding, Postgres store adapter, C2PA interop via c2pa-node,
 platform adapters (dating first).
 
+## Repository layout
+
+```
+packages/           publishable packages (npm workspaces, tsc project references)
+  core/             @tether/core - manifest model, hashing, fingerprint, provenance card
+  crypto/           @tether/crypto - Signer interface, Ed25519, ML-DSA placeholder
+  manifest-store/   @tether/manifest-store - append-only repository + in-memory impl
+  watermark/        @tether/watermark - watermark interface (DCT impl in progress)
+  tether/           @tether/sdk - the facade: sign() and verify()
+examples/           runnable samples, never published
+  basic-sign-verify/  the quickstart as code
+.github/            CI, release workflow, issue/PR templates, dependabot
+.changeset/         versioning + changelogs (changesets)
+```
+
 ## Development
 
 ```bash
 npm install
 npm run build   # tsc -b (project references)
-npm test        # tsx --test
+npm test        # build + tsx --test
+npm run lint    # eslint (typescript-eslint)
+npm run docs    # typedoc -> docs/api
 ```
+
+Contributing, security reporting and the release workflow are documented in
+[CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and
+[.changeset/README.md](.changeset/README.md).
 
 ## License
 

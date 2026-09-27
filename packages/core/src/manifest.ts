@@ -69,7 +69,8 @@ export interface Manifest {
  */
 export function signingPayload(manifest: Omit<Manifest, "signature">): Uint8Array {
   // Defensive: never let a signature field into its own signing payload.
-  const { signature: _sig, ...unsigned } = manifest as Manifest;
+  const unsigned = { ...(manifest as Manifest) };
+  delete (unsigned as Partial<Manifest>).signature;
   return new TextEncoder().encode(stableStringify(unsigned));
 }
 

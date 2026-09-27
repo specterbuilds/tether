@@ -24,7 +24,9 @@ export async function perceptualHash(pngBytes: Uint8Array): Promise<string> {
         const sx = Math.min(png.width - 1, Math.floor((x * png.width) / w));
         const sy = Math.min(png.height - 1, Math.floor((y * png.height) / h));
         const idx = (sy * png.width + sx) * 4;
-        const r = png.data[idx], g = png.data[idx + 1], b = png.data[idx + 2];
+        const r = png.data[idx],
+          g = png.data[idx + 1],
+          b = png.data[idx + 2];
         gray[y * w + x] = 0.299 * r + 0.587 * g + 0.114 * b;
       }
     }
@@ -57,6 +59,9 @@ export async function perceptualHash(pngBytes: Uint8Array): Promise<string> {
 export function hammingDistance(a: string, b: string): number {
   let x = BigInt(`0x${a}`) ^ BigInt(`0x${b}`);
   let d = 0;
-  while (x > 0n) { d += Number(x & 1n); x >>= 1n; }
+  while (x > 0n) {
+    d += Number(x & 1n);
+    x >>= 1n;
+  }
   return d;
 }

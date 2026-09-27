@@ -11,7 +11,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -b",
     "test": "tsx --test test/*.test.ts"
@@ -21,5 +23,26 @@
   },
   "devDependencies": {
     "@types/pngjs": "^6.0.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/specterbuilds/tether.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/specterbuilds/tether#readme",
+  "bugs": {
+    "url": "https://github.com/specterbuilds/tether/issues"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "photo-provenance",
+    "c2pa",
+    "content-credentials",
+    "provenance",
+    "image-verification"
+  ]
 }

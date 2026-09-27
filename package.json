@@ -5,19 +5,41 @@
   "description": "Tether - a vertical trust layer for photos, built on C2PA",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
   "scripts": {
     "build": "tsc -b",
-    "test": "tsx --test packages/*/test/*.test.ts",
-    "typecheck": "tsc -b --noEmit"
+    "test": "npm run build && tsx --test packages/*/test/*.test.ts",
+    "typecheck": "tsc -b --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "docs": "typedoc",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^3.0.3",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^22.0.0",
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9",
     "tsx": "^4.19.0",
-    "typescript": "^5.6.0"
+    "typedoc": "^0.28.20",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.70.1"
   },
   "engines": {
     "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/specterbuilds/tether.git"
+  },
+  "homepage": "https://github.com/specterbuilds/tether#readme",
+  "bugs": {
+    "url": "https://github.com/specterbuilds/tether/issues"
   }
 }

@@ -1,0 +1,18 @@
+name: Feature request
+description: Platform adapters, store backends, watermark work, verification UX
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: The platform integration or verification gap you're hitting.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: API shape, new package, or config - sketches welcome.
+    validations:
+      required: true

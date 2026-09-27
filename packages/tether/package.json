@@ -6,14 +6,43 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
-  "files": ["dist"],
-  "scripts": { "build": "tsc -b", "test": "tsx --test test/*.test.ts" },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "tsx --test test/*.test.ts"
+  },
   "dependencies": {
     "@tether/core": "*",
     "@tether/crypto": "*",
     "@tether/manifest-store": "*",
     "@tether/watermark": "*"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/specterbuilds/tether.git",
+    "directory": "packages/tether"
+  },
+  "homepage": "https://github.com/specterbuilds/tether#readme",
+  "bugs": {
+    "url": "https://github.com/specterbuilds/tether/issues"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "photo-provenance",
+    "c2pa",
+    "content-credentials",
+    "provenance",
+    "image-verification"
+  ]
 }

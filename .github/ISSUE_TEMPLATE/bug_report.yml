@@ -1,0 +1,33 @@
+name: Bug report
+description: Something in sign/verify, hashing, or the store behaves wrong
+labels: [bug]
+body:
+  - type: input
+    id: package
+    attributes:
+      label: Package
+      description: Which package? (@tether/sdk, @tether/core, @tether/crypto, @tether/manifest-store, @tether/watermark)
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, what you got. Include the provenance card or manifest when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Minimal code + a sample image description (dimensions, format). Do not attach private photos.
+      render: ts
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "Node 22.1, macOS 15, @tether/sdk 0.1.0"
+    validations:
+      required: true

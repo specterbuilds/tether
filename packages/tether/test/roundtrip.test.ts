@@ -9,9 +9,9 @@ function makePhoto(alter = 0): Uint8Array {
   for (let y = 0; y < 64; y++) {
     for (let x = 0; x < 64; x++) {
       const i = (y * 64 + x) * 4;
-      png.data[i] = (x * 4 + alter) % 256;     // r: horizontal gradient
-      png.data[i + 1] = (y * 4) % 256;         // g: vertical gradient
-      png.data[i + 2] = 128;                   // b: flat
+      png.data[i] = (x * 4 + alter) % 256; // r: horizontal gradient
+      png.data[i + 1] = (y * 4) % 256; // g: vertical gradient
+      png.data[i + 2] = 128; // b: flat
       png.data[i + 3] = 255;
       if (x > 16 && x < 48 && y > 16 && y < 48) png.data[i] = 255; // red square
     }
@@ -69,7 +69,10 @@ test("unrelated photo returns no card", async () => {
 
   const other = new PNG({ width: 64, height: 64, colorType: 2 });
   for (let i = 0; i < other.data.length; i += 4) {
-    other.data[i] = 10; other.data[i + 1] = 200; other.data[i + 2] = 90; other.data[i + 3] = 255;
+    other.data[i] = 10;
+    other.data[i + 1] = 200;
+    other.data[i + 2] = 90;
+    other.data[i + 3] = 255;
   }
   const card = await tether.verify(PNG.sync.write(other), {
     store,

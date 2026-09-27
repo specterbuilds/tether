@@ -19,8 +19,6 @@ export async function verifySignature(
     case "Ed25519":
       return verifyEd25519(publicKeyHex, payload, signature);
     case "ML-DSA-65":
-      throw new Error(
-        "ML-DSA-65 verification is not implemented yet; see MlDsaSigner docs",
-      );
+      throw new Error("ML-DSA-65 verification is not implemented yet; see MlDsaSigner docs");
   }
 }

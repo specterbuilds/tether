@@ -1,0 +1,14 @@
+{
+  "name": "tether-example-basic-sign-verify",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Runnable example: sign a photo at upload, verify it back to a provenance card",
+  "scripts": {
+    "start": "tsx index.ts"
+  },
+  "dependencies": {
+    "@tether/sdk": "*",
+    "pngjs": "^7.0.0"
+  }
+}
