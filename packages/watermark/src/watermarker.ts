@@ -1,11 +1,11 @@
 /**
- * Recoverable invisible watermark: embeds a payload that survives download,
- * recompression, cropping and screenshots, so a stripped-metadata image can
- * still be traced back to its manifest.
+ * Invisible watermark: embeds a payload in image pixels so a stripped-metadata
+ * image can still carry a pointer back to its manifest.
  *
- * STATUS: interface only. The embedding implementation (DCT-domain spread
- * spectrum, aligned with C2PA Durable Content Credentials' soft-binding
- * approach) is the next build milestone. See packages/watermark/README.md.
+ * Implementations: `LsbWatermarker` is a working lossless embedder (survives PNG
+ * re-encoding, not recompression); `NoOpWatermarker` is the pass-through default.
+ * A DCT-domain spread-spectrum mark aligned with C2PA Durable Content
+ * Credentials' soft binding (durable across recompression) is the next upgrade.
  */
 export interface Watermarker {
   readonly algorithm: string;

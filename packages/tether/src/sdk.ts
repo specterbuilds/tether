@@ -43,8 +43,19 @@ export interface VerifyOptions {
  * verify(): at view time, resolve an image back to a provenance card with
  *          issuer, claims, history and revocation status.
  */
+/** Result of signing: the manifest to record, and the published image bytes. */
+export interface SignResult {
+  manifest: Manifest;
+  /**
+   * The image to publish and serve. When a watermarker is used these bytes differ
+   * from the input (the mark is embedded before hashing), so integrators MUST
+   * publish THIS buffer - its pixels are what the manifest's content hash binds.
+   */
+  image: Uint8Array;
+}
+
 export class Tether {
-  async sign(imageBytes: Uint8Array, opts: SignOptions): Promise<Manifest> {
+  async sign(imageBytes: Uint8Array, opts: SignOptions): Promise<SignResult> {
     const watermarker = opts.watermarker ?? new NoOpWatermarker();
     const manifestId = randomUUID();
 
@@ -78,7 +89,7 @@ export class Tether {
       },
     };
     await opts.store.put(manifest);
-    return manifest;
+    return { manifest, image: embedded };
   }
 
   async verify(imageBytes: Uint8Array, opts: VerifyOptions): Promise<ProvenanceCard | null> {

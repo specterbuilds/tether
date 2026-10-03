@@ -36,8 +36,11 @@ export interface WatermarkInfo {
 }
 
 export interface SignatureInfo {
-  /** "Ed25519" today; "ML-DSA-65" (Dilithium) reserved for PQ signers. */
-  algorithm: "Ed25519" | "ML-DSA-65";
+  /**
+   * Signature scheme: "Ed25519" (classical), "ML-DSA-65" (FIPS 204 / Dilithium,
+   * post-quantum), or "Ed25519+ML-DSA-65" (hybrid; both must verify).
+   */
+  algorithm: "Ed25519" | "ML-DSA-65" | "Ed25519+ML-DSA-65";
   /** Hex-encoded public key that verifies `value`. */
   publicKey: string;
   /** Hex-encoded signature over the canonical manifest payload. */

@@ -1,7 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { PNG } from "pngjs";
-import { Tether, Ed25519Signer, InMemoryManifestStore, type Issuer } from "../src/index.js";
+import {
+  Tether,
+  Ed25519Signer,
+  MlDsaSigner,
+  HybridSigner,
+  LsbWatermarker,
+  InMemoryManifestStore,
+  type Issuer,
+} from "../src/index.js";
 
 /** Deterministic test image: a left-to-right gradient with a red square. */
 function makePhoto(alter = 0): Uint8Array {
@@ -31,7 +39,7 @@ function setup() {
 test("sign then verify the same bytes: exact match, valid signature", async () => {
   const { signer, store, tether } = setup();
   const photo = makePhoto();
-  const manifest = await tether.sign(photo, {
+  const { manifest } = await tether.sign(photo, {
     issuer,
     claims: [{ type: "tether.dating/uploader-attested", value: { accountAgeDays: 400 } }],
     signer,
@@ -95,7 +103,7 @@ test("card fails closed when the issuer key is not trusted", async () => {
 test("revoked manifest shows revoked on the card and in history", async () => {
   const { signer, store, tether } = setup();
   const photo = makePhoto();
-  const manifest = await tether.sign(photo, { issuer, claims: [], signer, store });
+  const { manifest } = await tether.sign(photo, { issuer, claims: [], signer, store });
   await store.revoke(manifest.manifestId);
 
   const card = await tether.verify(photo, { store, trustedPublicKeys: [signer.publicKeyHex] });
@@ -103,6 +111,71 @@ test("revoked manifest shows revoked on the card and in history", async () => {
   assert.equal(card.revoked, true);
   assert.equal(card.history.length, 1);
   assert.equal(card.history[0].revoked, true);
+});
+
+test("post-quantum: sign and verify with ML-DSA-65 through the SDK", async () => {
+  const signer = MlDsaSigner.generate();
+  const store = new InMemoryManifestStore();
+  const tether = new Tether();
+  const photo = makePhoto();
+
+  const { manifest } = await tether.sign(photo, {
+    issuer,
+    claims: [{ type: "tether.dating/uploader-attested", value: { accountAgeDays: 400 } }],
+    signer,
+    store,
+  });
+  assert.equal(manifest.signature.algorithm, "ML-DSA-65");
+  assert.equal(manifest.signature.publicKey, signer.publicKeyHex);
+
+  const card = await tether.verify(photo, { store, trustedPublicKeys: [signer.publicKeyHex] });
+  assert.ok(card);
+  assert.equal(card.integrity, "exact");
+  assert.equal(card.signatureValid, true);
+
+  // Fails closed under an untrusted key, exactly like the Ed25519 path.
+  const stranger = MlDsaSigner.generate();
+  const untrusted = await tether.verify(photo, {
+    store,
+    trustedPublicKeys: [stranger.publicKeyHex],
+  });
+  assert.ok(untrusted);
+  assert.equal(untrusted.signatureValid, false);
+});
+
+test("hybrid: sign and verify with Ed25519+ML-DSA-65 through the SDK", async () => {
+  const signer = HybridSigner.generate();
+  const store = new InMemoryManifestStore();
+  const tether = new Tether();
+  const photo = makePhoto();
+
+  const { manifest } = await tether.sign(photo, { issuer, claims: [], signer, store });
+  assert.equal(manifest.signature.algorithm, "Ed25519+ML-DSA-65");
+
+  const card = await tether.verify(photo, { store, trustedPublicKeys: [signer.publicKeyHex] });
+  assert.ok(card);
+  assert.equal(card.integrity, "exact");
+  assert.equal(card.signatureValid, true);
+});
+
+test("watermark: LSB mark embeds the manifestId and survives into the signed bytes", async () => {
+  const signer = Ed25519Signer.generate();
+  const store = new InMemoryManifestStore();
+  const tether = new Tether();
+  const watermarker = new LsbWatermarker();
+
+  const { manifest, image } = await tether.sign(makePhoto(), { issuer, claims: [], signer, store, watermarker });
+  assert.equal(manifest.watermark.embedded, true);
+  assert.equal(manifest.watermark.algorithm, "lsb-v1");
+
+  // The returned `image` is the published buffer; its pixels carry the manifestId
+  // and are what the content hash binds (verify resolves it back to this manifest).
+  const recovered = await watermarker.extract(image);
+  assert.equal(new TextDecoder().decode(recovered!), manifest.manifestId);
+
+  const card = await tether.verify(image, { store, trustedPublicKeys: [signer.publicKeyHex] });
+  assert.equal(card?.integrity, "exact");
+  assert.equal(card?.signatureValid, true);
 });
 
 test("key custody: export and restore signer round-trips", async () => {
