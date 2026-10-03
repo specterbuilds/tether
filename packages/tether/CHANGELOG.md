@@ -1,5 +1,11 @@
 # @tether/sdk
 
+## 0.2.1
+
+### Patch Changes
+
+- 559d8b2: Demo-ready README: the basic-sign-verify example now prints a staged walkthrough and writes its sample assets (original/recompressed photos, provenance-card.json), and the root README embeds the real captured run.
+
 ## 0.2.0
 
 ### Minor Changes
